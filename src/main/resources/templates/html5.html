@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>图片上传 - 普通版</title>
+</head>
+<body>
+	<div class="container">
+		<h2>普通多文件上传 </h2>
+		<p>html5的multiple属性可以一次性选择多个文件</p>
+		<p>html5的accept属性允许文件的属性</p>
+        <form th:action="@{../demo/local}" method="POST" enctype="multipart/form-data">
+<!--   			选择图片: <input type="file" name="file" multiple="multiple" accept="image/*" /> -->
+  			选择图片: <input type="file" name="file" multiple="multiple" />
+  			<input type="submit" />
+		</form>
+    </div>
+</body>
+</html>

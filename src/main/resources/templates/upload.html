@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Free Image Hosting</title>
+    <link th:href="@{./assets/css/bootstrap.min.css}" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{./assets/upload/uploadifive.css}" />
+    <link rel="stylesheet" th:href="@{./assets/css/bootstrapValidator.css}" />
+    <script th:src="@{./assets/js/jquery.min.js}"></script>
+    <script th:src="@{./assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{./assets/upload/jquery.uploadifive.js}" type="text/javascript"></script>
+    <script th:src="@{./assets/js/kindle.js}"></script>
+    <script th:src="@{./assets/js/bootstrapValidator.js}"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" th:href="@{./}">IMAGE FREE</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="javascript:void(0)" id="show-login" th:if="${ali eq false or ali eq null}" target="_self">登录</a></li>
+                    <li><a th:href="@{./view/{user}(user=${usr})}" th:if="${ali eq true}"><span th:text="${usr}"></span></a></li>
+                    <li><a th:href="@{./logout}" th:if="${ali eq true}" target="_self">[退出]</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- 登录模态框  -->
+    <div class="modal fade login" id="loginModal">
+        <div class="modal-dialog login animated">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="box">
+                        <div class="content">
+                            <div class="form loginBox">
+                                <form id="login-form" method="post" th:action="@{/login}">
+                                    <div class="form-group">
+                                        <label class="control-label">邮箱</label>
+                                        <input type="text" class="form-control" name="username" id="username" autocomplete="off" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">密码</label>
+                                        <input type="password" class="form-control" name="password" id="password"/>
+                                    </div>
+                                    <div class="form-group" style="float:right">
+                                        <button type="submit" class="btn btn-primary btn-sm">登录</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="content registerBox" style="display:none;">
+                            <div class="form">
+                                <form method="post" th:action="@{/register}" id="register-form">
+                                    <div class="form-group">
+                                        <label class="control-label">邮箱</label>
+                                        <input type="text" class="form-control" name="useremail" id="useremail" autocomplete="off" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">密码</label>
+                                        <input type="password" class="form-control" name="password1" id="password1"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">重复密码</label>
+                                        <input type="password" class="form-control" name="password2" id="password2"/>
+                                    </div>
+                                    <div class="form-group" style="float:right">
+                                        <button type="submit" class="btn btn-primary btn-sm">注册</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="forgot login-footer">
+                        <span>no account?
+                         <a href="javascript: showRegisterForm();">Register</a></span>
+                    </div>
+                    <div class="forgot register-footer" style="display:none">
+                        <span>already have an account?</span>
+                        <a href="javascript: showLoginForm();">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 登录模态框  -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Image Upload</h1> 15 MB max per file.10 files max per request.
+            <strong style="float:right;"></strong>
+        </div>
+        <div class="form-group">
+            <div class="file-preview ">
+                <div class=" file-drop-zone" id="queue">
+                    <div class="file-drop-zone-title">Drag &amp; drop files here …</div>
+                </div>
+            </div>
+        </div>
+        <div class="input-group ">
+            <div tabindex="-1" class="form-control file-caption kv-fileinput-caption">
+                <span class="file-caption-ellipsis">…</span>
+                <div class="file-caption-name"></div>
+            </div>
+            <div class="input-group-btn">
+                <a href="javascript:$('#file_upload').uploadifive('clearQueue')" title="移除" class=" hide btn btn-default" id="queue-remove"><i class="glyphicon glyphicon-trash"></i> Remove</a>
+                <a href="javascript:$('#file_upload').uploadifive('upload')" title="上传" class=" hide btn btn-default" id="queue-upload"><i class="glyphicon glyphicon-upload"></i> Upload</a>
+                <input type="file" name="file_upload" id="file_upload" />
+            </div>
+        </div>
+        <div id="showurl" style="display: none;">
+            <ul id="navTab" class="nav nav-tabs">
+                <li class="active"><a href="#urlcodes" data-toggle="tab">URL</a></li>
+                <li><a href="#bbcodes" data-toggle="tab">BBCode(含缩略图)</a></li>
+                <li><a href="#htmlcodes" data-toggle="tab">HTML(含缩略图)</a></li>
+                <li><a href="#markdowncodes" data-toggle="tab">Markdown(含缩略图)</a></li>
+            </ul>
+            <div id="navTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="urlcodes">
+                    <pre style="margin-top: 5px;"><code id="urlcode"></code></pre>
+                </div>
+                <div class="tab-pane fade" id="bbcodes">
+                    <pre style="margin-top: 5px;"><code id="bbcode"></code></pre>
+                </div>
+                <div class="tab-pane fade" id="htmlcodes">
+                    <pre style="margin-top: 5px;"><code id="htmlcode"></code></pre>
+                </div>
+                <div class="tab-pane fade" id="markdowncodes">
+                    <pre style="margin-top: 5px;"><code id="markdown"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+    $(function() {
+    	var ali = [[${ali}]];
+        $('#file_upload').uploadifive({
+            'auto': false, 
+            'dnd': ali, 
+            'buttonClass': 'btn btn-primary btn-file',
+            'buttonText': '<i class="glyphicon glyphicon-folder-open"></i> &nbsp;Browse',
+            'uploadScript': './action/qiniu', //  ./demo/local
+            'queueID': 'queue', 
+            'fileObjName': 'file', 
+            'fileType': 'image/*', 
+            'queueSizeLimit': 10, 
+            'uploadLimit': 10,  
+            'simUploadLimit': 3, 
+            'fileSizeLimit': 15360, 
+            'removeCompleted': false, 
+            'onInit': function(options) {
+            	if(ali != true) {
+            		$('#uploadifive-file_upload > input')[1].setAttribute("disabled","disabled");
+            		$('.file-drop-zone-title').text('Login Before Upload!');
+            	}
+            },
+            'onFallback': function() {
+                alert('Oops! Your browser doesn\'t support html5');
+            },
+            'onAddQueueItem': function(file) {
+                $('.file-drop-zone-title').remove();
+                $('#queue-upload').removeClass('hide');
+                $('#queue-remove').removeClass('hide');
+            },
+            'onDrop': function(files, fileDropCount) {
+            	$('.file-caption-name').html(fileDropCount +" files loaded");
+            },
+            'onSelect': function(queue) {
+            	$('.file-caption-name').html(queue.count +" files loaded");
+            },
+            'onUploadComplete': function(file, data) {
+                try {
+                    var info = JSON.parse(data),
+                        link = info.link,
+                        thumbnail = link + info.style,
+                    	status = info.status;
+                    if("200" == status) {
+                    	$('#urlcode').append(link + "<br />");
+                        $('#htmlcode').append("&lt;a href=\"" + link + "\"&gt;&lt;img src=\"" + thumbnail + "\"/&gt;&lt;/a&gt;" + "<br />");
+                        $('#bbcode').append("[URL=" + link + "][IMG]" + thumbnail + "[/IMG][/URL] ");
+                        $('#markdown').append("[![](" + thumbnail + ")](" + link + ")" + "<br />");
+                    } else {
+                    	$('#urlcode').append(status + "<br />");
+                        $('#htmlcode').append(status + "<br />");
+                        $('#bbcode').append(status + "<br />");
+                        $('#markdown').append(status + "<br />");
+                    }
+                } catch (e) {
+                    alert("refresh this page for error!");
+                    $('#urlcode').append("ERROR::UNKNOWN" + "<br />");
+                    $('#htmlcode').append("ERROR::UNKNOWN" + "<br />");
+                    $('#bbcode').append("ERROR::UNKNOWN" + "<br />");
+                    $('#markdown').append("ERROR::UNKNOWN" + "<br />");
+                    window.location.reload(true);
+                }
+            },
+            'onQueueComplete': function(uploads) {
+	         	$('#showurl').show();
+            },
+            'onClearQueue': function(queue) {
+                window.location.reload();
+            },
+        });
+    });
+    </script>
+    <footer class="footer">
+        <div class="container">
+        	<p class="text-muted" style="float:left">请勿上传违反中国法律的图片，违者后果自负。</p>
+        	<p><br /></p>
+            <p class="text-muted" style="float:right">simple demo from sm.ms</p>
+        </div>
+    </footer>
+</body>
+</html>
