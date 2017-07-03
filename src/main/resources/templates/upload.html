@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Free Image Hosting</title>
-    <link th:href="@{./assets/css/bootstrap.min.css}" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{./assets/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{./assets/upload/uploadifive.css}" />
     <link rel="stylesheet" th:href="@{./assets/css/bootstrapValidator.css}" />
     <script th:src="@{./assets/js/jquery.min.js}"></script>
@@ -31,7 +31,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="javascript:void(0)" id="show-login" th:if="${ali eq false or ali eq null}" target="_self">登录</a></li>
-                    <li><a th:href="@{./view/{user}(user=${usr})}" th:if="${ali eq true}"><span th:text="${usr}"></span></a></li>
+                    <li><a th:href="@{./view(pageNum=1,pageSize=10)}" th:if="${ali eq true}"><span th:text="${usr}"></span></a></li>
                     <li><a th:href="@{./logout}" th:if="${ali eq true}" target="_self">[退出]</a></li>
                 </ul>
             </div>

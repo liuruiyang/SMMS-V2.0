@@ -1,6 +1,7 @@
 package studio.imgbox.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class StorageService {
 		return storageMapper.insertUpload(storage);
 	}
 
-	public Storage[] listUserUpload(String userEmail) {
+	public List<Storage> listUserUpload(String userEmail) {
 		return storageMapper.findUserStorage(userEmail);
 	}
 }
